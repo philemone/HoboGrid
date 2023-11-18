@@ -3,8 +3,6 @@ package filemon.taminar.reflection
 import scala.quoted.*
 import scala.deriving.Mirror
 import scala.compiletime.constValueTuple
-import filemon.taminar.reflection.PrintTree.printTreeImpl
-import filemon.taminar.reflection.PrintTree.printTree
 
 case class FieldRepresentation(name: String, typeAsString: String, valueAsString: String)
 
@@ -30,11 +28,21 @@ private def fieldNamesWithTypes[T: Type](expr: Expr[T])(using Quotes): Expr[List
       .map(fieldTypeStringRepr)
   )
 
-  val accessors = Expr.ofList(fields.map(Select(expr.asTerm, _).asExpr))
+  def testStringRepresentation[T: Type](expr: Expr[T]) = {}
+
+  testStringRepresentation(expr)
+  val accessors: Expr[List[String]] = Expr.ofList(fields.map(a => {
+    typeRep.memberType(a).asType match {
+      case '[t] => {
+        val s = Select(expr.asTerm, a).asExprOf[t]
+        valuesToString(s)
+      }
+    }
+
+  }))
 
   '{
     $accessors
-      .map(valuesToString)
       .zip($fieldNamesExpr)
       .zip($fieldsType)
       .map(t3 => FieldRepresentation(t3._1._2, t3._2, t3._1._1))
@@ -42,6 +50,6 @@ private def fieldNamesWithTypes[T: Type](expr: Expr[T])(using Quotes): Expr[List
 
 }
 
-inline def fieldNamesAndTypes[A](cc: A): List[FieldRepresentation] = ${
+inline def fieldNamesAndTypes[A](inline cc: A): List[FieldRepresentation] = ${
   fieldNamesWithTypes[A]('cc)
 }

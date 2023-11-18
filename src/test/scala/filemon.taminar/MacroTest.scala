@@ -17,7 +17,7 @@ class Test extends AnyFlatSpec with Matchers {
     r.head shouldBe FieldRepresentation("name", "String", "Monica")
   }
 
-  "CC - optional field" should "display only value" in {
+  "CC - optional field" should "display only valu" in {
     case class TestCC(name: Option[String])
     val r = fieldNamesAndTypes[TestCC](TestCC(Some("Monica")))
     r.size shouldBe 1
@@ -72,15 +72,15 @@ class Test extends AnyFlatSpec with Matchers {
     case class TestCC(tuple3: (String, Int, Boolean))
     val r = fieldNamesAndTypes[TestCC](TestCC(("Uno", 1, true)))
     r.size shouldBe 1
-    r.head shouldBe FieldRepresentation("tuple3", "Tuple3[String, Int, Boolean]", "(Uno,1,true)")
+    r.head shouldBe FieldRepresentation("tuple3", "Tuple3[String, Int, Boolean]", "(Uno, 1, true)")
   }
+ 
 
-
-  "CC - tuple with list" should "display tuple types" in {
+  "CC - tuple with list" should "display tuple type" in {
     case class TestCC(tuple3: (String, List[Int], Boolean))
     val r = fieldNamesAndTypes[TestCC](TestCC(("Uno", List(1), true)))
     r.size shouldBe 1
-    r.head shouldBe FieldRepresentation("tuple3", "Tuple3[String, List[Int], Boolean]", "(Uno,1,true)")
+    r.head shouldBe FieldRepresentation("tuple3", "Tuple3[String, List[Int], Boolean]", "(Uno, 1, true)")
   }
 
 
