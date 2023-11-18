@@ -4,13 +4,13 @@ import scala.quoted.*
 import scala.deriving.Mirror
 import scala.compiletime.constValueTuple
 
-case class FieldRepresentation(name: String, typeAsString: String, valueAsString: String)
+case class FieldRepresentation(fieldName: String, displayType: String, displayValue: String)
 
 private def fieldNamesWithTypes[T: Type](expr: Expr[T])(using Quotes): Expr[List[FieldRepresentation]] = {
   import quotes.reflect.*
 
-  val typeRep = TypeRepr.of[T]
-  val fields = TypeTree.of[T].symbol.caseFields
+  val typeRep    = TypeRepr.of[T]
+  val caseFields = TypeTree.of[T].symbol.caseFields
 
   def fieldTypeStringRepr(tr: TypeRepr): String = {
     if (tr.typeArgs.isEmpty) tr.typeSymbol.name
@@ -21,31 +21,28 @@ private def fieldNamesWithTypes[T: Type](expr: Expr[T])(using Quotes): Expr[List
     }
   }
 
-  val fieldNamesExpr = Expr(fields.map(_.name))
-  val fieldsType = Expr(
-    fields
+  val fieldNamesExpr = Expr(caseFields.map(_.name))
+  val fieldsType     = Expr(
+    caseFields
       .map(typeRep.memberType)
       .map(fieldTypeStringRepr)
   )
 
-  def testStringRepresentation[T: Type](expr: Expr[T]) = {}
-
-  testStringRepresentation(expr)
-  val accessors: Expr[List[String]] = Expr.ofList(fields.map(a => {
-    typeRep.memberType(a).asType match {
-      case '[t] => {
-        val s = Select(expr.asTerm, a).asExprOf[t]
-        valuesToString(s)
+  val fieldValueAsString: Expr[List[String]] = Expr.ofList(
+    caseFields.map(a => {
+      typeRep.memberType(a).asType match {
+        case '[t] => valuesToString(Select(expr.asTerm, a).asExprOf[t])
       }
-    }
-
-  }))
+    })
+  )
 
   '{
-    $accessors
+    $fieldValueAsString
       .zip($fieldNamesExpr)
       .zip($fieldsType)
-      .map(t3 => FieldRepresentation(t3._1._2, t3._2, t3._1._1))
+      .map { case (((displayValue, fieldName), displayType)) =>
+        FieldRepresentation(fieldName, displayType, displayValue)
+      }
   }
 
 }

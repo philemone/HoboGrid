@@ -1,12 +1,12 @@
 package filemon.taminar
 
+import org.scalatest.matchers.should.Matchers
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest._
-import matchers._
 import filemon.taminar.reflection.fieldNamesAndTypes
 import filemon.taminar.reflection.FieldRepresentation
 import java.time.LocalDateTime
-import org.scalatest.matchers.should.Matchers
+import matchers._
 
 class Test extends AnyFlatSpec with Matchers {
 
@@ -17,14 +17,14 @@ class Test extends AnyFlatSpec with Matchers {
     r.head shouldBe FieldRepresentation("name", "String", "Monica")
   }
 
-  "CC - optional field" should "display only valu" in {
+  "CC - optional field" should "display value" in {
     case class TestCC(name: Option[String])
     val r = fieldNamesAndTypes[TestCC](TestCC(Some("Monica")))
     r.size shouldBe 1
     r.head shouldBe FieldRepresentation("name", "Option[String]", "Monica")
   }
 
-  "CC - optional field" should "display nothing on empty" in {
+  "CC - optional field" should "display empty string on empty" in {
     case class TestCC(name: Option[String])
     val r = fieldNamesAndTypes[TestCC](TestCC(None))
     r.size shouldBe 1
@@ -38,14 +38,14 @@ class Test extends AnyFlatSpec with Matchers {
     r.head shouldBe FieldRepresentation("books", "List[String]", "FP 2022, FP 2023")
   }
 
-  "CC - list inside list" should "display higher kinded types of level 2 correctly" in {
+  "CC - list inside list" should "display higher kinded types of level 2" in {
     case class TestCC(listInList: List[List[String]])
     val r = fieldNamesAndTypes[TestCC](TestCC(Nil))
     r.size shouldBe 1
     r.head shouldBe FieldRepresentation("listInList", "List[List[String]]", "")
   }
 
-  "CC - two lists" should "display handle higher kinded types correctly" in {
+  "CC - two lists" should "display higher kinded types" in {
     case class TestCC(books: List[String], ids: List[Int])
     val r = fieldNamesAndTypes[TestCC](TestCC(List("FP 2022", "FP 2023"), List(100,101,102)))
     r.size shouldBe 2
@@ -55,7 +55,7 @@ class Test extends AnyFlatSpec with Matchers {
     )
   }
 
-  "CC - mutiple basic types" should "display properly" in {
+  "CC - mutiple basic types" should "display all together" in {
     case class User(name: String, age: Int, hot: Boolean, born: LocalDateTime, moneyInPocket: BigDecimal)
     val r = fieldNamesAndTypes[User](User("Eric", 29, true, LocalDateTime.of(2023, 2, 2, 12, 0), 20.3))
     r.size shouldBe 5
@@ -75,15 +75,14 @@ class Test extends AnyFlatSpec with Matchers {
     r.head shouldBe FieldRepresentation("tuple3", "Tuple3[String, Int, Boolean]", "(Uno, 1, true)")
   }
 
-  "CC - tuple with list" should "display tuple type" in {
+  "CC - tuple with list" should "display nested tuple type" in {
     case class TestCC(tuple3: (String, List[Int], Boolean))
     val r = fieldNamesAndTypes[TestCC](TestCC(("Uno", List(1), true)))
     r.size shouldBe 1
     r.head shouldBe FieldRepresentation("tuple3", "Tuple3[String, List[Int], Boolean]", "(Uno, 1, true)")
   }
 
-
-  "CC - tuple with nested tuple" should "display proper types" in {
+  "CC - tuple with nested tuple" should "display nested types" in {
     case class TestCC(tuple3: (String, (String, Integer), Integer))
     val r = fieldNamesAndTypes[TestCC](TestCC(("Uno", ("Due", 2), 1)))
     r.size shouldBe 1
