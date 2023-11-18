@@ -4,9 +4,6 @@ name := "taminar"
 organization := "filemon.taminar"
 version := "1.0"
 scalacOptions += "-Xcheck-macros"
-scalacOptions += "-target:jvm-17"
-scalacOptions += "-Ymacro-debug-lite"
-
 
 //enablePlugins(ScalaJSPlugin)
 //scalaJSUseMainModuleInitializer := true

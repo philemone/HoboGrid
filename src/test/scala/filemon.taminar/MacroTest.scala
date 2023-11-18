@@ -3,36 +3,85 @@ package filemon.taminar
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest._
 import matchers._
-import filemon.taminar.fieldNamesAndTypes
+import filemon.taminar.reflection.fieldNamesAndTypes
+import filemon.taminar.reflection.FieldRepresentation
+import java.time.LocalDateTime
+import org.scalatest.matchers.should.Matchers
 
-class Test extends AnyFlatSpec with should.Matchers {
+class Test extends AnyFlatSpec with Matchers {
 
-  "Case class with one field" should "display data, type and name" in {
-    case class Person(name: String)
-    val r = fieldNamesAndTypes[Person](Person("Monica"))
+  "CC - one field" should "display data, type and name" in {
+    case class TestCC(name: String)
+    val r = fieldNamesAndTypes[TestCC](TestCC("Monica"))
     r.size shouldBe 1
     r.head shouldBe FieldRepresentation("name", "String", "Monica")
   }
 
-  "Case class with optional field" should "display only value" in {
-    case class Person(name: Option[String])
-    val r = fieldNamesAndTypes[Person](Person(Some("Monica")))
+  "CC - optional field" should "display only value" in {
+    case class TestCC(name: Option[String])
+    val r = fieldNamesAndTypes[TestCC](TestCC(Some("Monica")))
     r.size shouldBe 1
     r.head shouldBe FieldRepresentation("name", "Option[String]", "Monica")
   }
 
-  "Case class with optional field" should "display nothing on empty" in {
-    case class Person(name: Option[String])
-    val r = fieldNamesAndTypes[Person](Person(None))
+  "CC - optional field" should "display nothing on empty" in {
+    case class TestCC(name: Option[String])
+    val r = fieldNamesAndTypes[TestCC](TestCC(None))
     r.size shouldBe 1
     r.head shouldBe FieldRepresentation("name", "Option[String]", "")
   }
 
-  "Case class with list" should "display list inner type" in {
-    case class Shelf(books: List[String])
-    val r = fieldNamesAndTypes[Shelf](Shelf(List("FP 2022", "FP 2023")))
+  "CC - list" should "display list higher kinded type" in {
+    case class TestCC(books: List[String])
+    val r = fieldNamesAndTypes[TestCC](TestCC(List("FP 2022", "FP 2023")))
     r.size shouldBe 1
     r.head shouldBe FieldRepresentation("books", "List[String]", "FP 2022, FP 2023")
   }
+
+  "CC - list inside list" should "display higher kinded types of level 2 correctly" in {
+    case class TestCC(listInList: List[List[String]])
+    val r = fieldNamesAndTypes[TestCC](TestCC(Nil))
+    r.size shouldBe 1
+    r.head shouldBe FieldRepresentation("listInList", "List[List[String]]", "")
+  }
+
+  "CC - two lists" should "display handle higher kinded types correctly" in {
+    case class TestCC(books: List[String], ids: List[Int])
+    val r = fieldNamesAndTypes[TestCC](TestCC(List("FP 2022", "FP 2023"), List(100,101,102)))
+    r.size shouldBe 2
+    r should contain theSameElementsAs List(
+      FieldRepresentation("books", "List[String]", "FP 2022, FP 2023"),
+      FieldRepresentation("ids", "List[Int]", "100, 101, 102")
+    )
+  }
+
+  "CC - mutiple basic types" should "display properly" in {
+    case class User(name: String, age: Int, hot: Boolean, born: LocalDateTime, moneyInPocket: BigDecimal)
+    val r = fieldNamesAndTypes[User](User("Eric", 29, true, LocalDateTime.of(2023, 2, 2, 12, 0), 20.3))
+    r.size shouldBe 5
+    r should contain theSameElementsAs List(
+      FieldRepresentation("name", "String", "Eric"),
+      FieldRepresentation("age", "Int", "29"),
+      FieldRepresentation("hot", "Boolean", "true"),
+      FieldRepresentation("born", "LocalDateTime", "2023-02-02T12:00"),
+      FieldRepresentation("moneyInPocket", "BigDecimal", "20.3"),
+    )
+  }
+
+  "CC - tuple" should "display tuple types" in {
+    case class TestCC(tuple3: (String, Int, Boolean))
+    val r = fieldNamesAndTypes[TestCC](TestCC(("Uno", 1, true)))
+    r.size shouldBe 1
+    r.head shouldBe FieldRepresentation("tuple3", "Tuple3[String, Int, Boolean]", "(Uno,1,true)")
+  }
+
+
+  "CC - tuple with list" should "display tuple types" in {
+    case class TestCC(tuple3: (String, List[Int], Boolean))
+    val r = fieldNamesAndTypes[TestCC](TestCC(("Uno", List(1), true)))
+    r.size shouldBe 1
+    r.head shouldBe FieldRepresentation("tuple3", "Tuple3[String, List[Int], Boolean]", "(Uno,1,true)")
+  }
+
 
 }
