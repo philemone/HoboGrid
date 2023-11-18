@@ -74,7 +74,6 @@ class Test extends AnyFlatSpec with Matchers {
     r.size shouldBe 1
     r.head shouldBe FieldRepresentation("tuple3", "Tuple3[String, Int, Boolean]", "(Uno, 1, true)")
   }
- 
 
   "CC - tuple with list" should "display tuple type" in {
     case class TestCC(tuple3: (String, List[Int], Boolean))
@@ -83,5 +82,12 @@ class Test extends AnyFlatSpec with Matchers {
     r.head shouldBe FieldRepresentation("tuple3", "Tuple3[String, List[Int], Boolean]", "(Uno, 1, true)")
   }
 
+
+  "CC - tuple with nested tuple" should "display proper types" in {
+    case class TestCC(tuple3: (String, (String, Integer), Integer))
+    val r = fieldNamesAndTypes[TestCC](TestCC(("Uno", ("Due", 2), 1)))
+    r.size shouldBe 1
+    r.head shouldBe FieldRepresentation("tuple3", "Tuple3[String, Tuple2[String, Integer], Integer]", "(Uno, (Due, 2), 1)")
+  }
 
 }
