@@ -1,11 +1,11 @@
-package philemone.taminar
+package philemone.hobogrid
 
-import philemone.taminar.reflection.FieldRepresentation
-import philemone.taminar.reflection.fieldNamesAndTypes
+import philemone.hobogrid.reflection.FieldRepresentation
+import philemone.hobogrid.reflection.fieldNamesAndTypes
 
 case class Dog(name: String, age: Int, isBig: Boolean)
 
-class Taminar[T] {
+class Hobogrid[T] {
 
   // TODO integrate it with scala.js
   // Method just to prove a point ? 

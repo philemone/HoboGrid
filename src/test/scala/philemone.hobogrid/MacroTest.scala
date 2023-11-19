@@ -1,10 +1,10 @@
-package philemone.taminar
+package philemone.hobogrid
 
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest._
-import philemone.taminar.reflection.fieldNamesAndTypes
-import philemone.taminar.reflection.FieldRepresentation
+import philemone.hobogrid.reflection.fieldNamesAndTypes
+import philemone.hobogrid.reflection.FieldRepresentation
 import java.time.LocalDateTime
 import matchers._
 
