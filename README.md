@@ -1,16 +1,14 @@
-# Hobogrid
+# Hobogrid's
 
-Hey there! You're probably lost... But don't worry!
+Hello there! You're most likely lost... But don't be concerned!
 
-Ever found yourself stuck with a bunch of `case class` instances in a list somewhere on the frontend, desperately wishing for an easy way to turn them into a table? Enter Hobogrid, your table-making buddy!
+Ever been stuck with a number of `case class` instances in a list someplace on the frontend, looking for an easy way to transform them into a table? Enter Hobogrid, your table-setting companion!
 
 ### Laminar
 
-If you are familiar with [Laminar](https://github.com/raquo/Laminar) you can figure out easly, that Hobogrid is mean to be tables for Laminar :) 
+The purpose of Hobogrid is to provide usable tables/grids for [Laminar](https://github.com/raquo/Laminar). 
 
 ## Use Case
-So, you're facing the classic `List[CaseClass]` conundrum? You could go all fancy with shapeless for the table-building shenanigans. It's a solid choice—like bringing a magician to a party.
+So you're stuck with the `List[CaseClass]` and you want to display them effortless? For the table-building adventures, you could go all out with shapeless. It's a safe bet, like inviting a magician to a party.
 
-But, if you're open to an adventure and a little bit of a let's-get-this-done kind of coder, Hobogrid's your coding buddy. Throw your list its way, and it'll cook up a basic HTML table without breaking a sweat.
-
-Concerned about the looks? You should be... tables look ugly. Hobogrid, with a little push, can make it usable (but not right now)
+However, if you're up for an adventure and a bit of a let's-get-this-done type of coder, Hobogrid is your coding companion. Throw it a list, and it'll create a basic HTML table without breaking a sweat.
