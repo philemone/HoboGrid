@@ -1,4 +1,4 @@
-package philemone.hobogrid.reflection
+package philemone.hoboshape.reflection
 
 import scala.quoted.*
 
@@ -8,7 +8,7 @@ private object TupleStrRepr {
   def mkString(list: List[String]) = list.mkString(start, separator, end)
 }
 
-private[hobogrid] def valuesToString[T: Type](expr: Expr[T], depth: Int = 0)(using Quotes): Expr[String] = {
+private[hoboshape] def valuesToString[T: Type](expr: Expr[T], depth: Int = 0)(using Quotes): Expr[String] = {
   import quotes.reflect.*
 
   val typeArgs = TypeRepr.of[T].typeArgs

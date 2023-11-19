@@ -1,3 +1,5 @@
+import Versions._
+
 ThisBuild / version      := "0.0.1.001-SNAPSHOT"
 ThisBuild / scalaVersion := "3.3.1"
 ThisBuild / organization := "io.github.philemone"
@@ -6,60 +8,73 @@ ThisBuild / scalacOptions ++= Seq(
   "-Wunused:all"
 )
 
-lazy val hobogridJS = project
+val githubPage = "https://github.com/philemone"
+
+lazy val hobogrid = project
   .in(file("js"))
   .enablePlugins(ScalaJSPlugin)
   .settings(developerSettings)
   .settings(
-    scalaJSUseMainModuleInitializer := true,
-    name                            := "hobogridJS",
+    name                 := "hobogrid",
     libraryDependencies ++= Seq(
-      "com.raquo"     %%% "laminar"            % "16.0.0",
-      "org.scalatest" %%% "scalatest"          % "3.2.17" % "test",
-      "org.scalatest" %%% "scalatest-flatspec" % "3.2.17" % "test"
+      "com.raquo"     %%% "laminar"            % laminarV,
+      "org.scalatest" %%% "scalatest"          % scalatestV % "test",
+      "org.scalatest" %%% "scalatest-flatspec" % scalatestV % "test"
     ),
-    pomIncludeRepository            := { _ => false },
-    publishMavenStyle               := true,
+    pomIncludeRepository := { _ => false },
+    publishMavenStyle    := true,
     licenses += ("MIT", new URL("https://github.com/philemone/hobogrid/blob/master/LICENSE")),
     credentials += Credentials(Path.userHome / ".sbt" / "sonatype_credentials"),
-    publishTo                       := {
+    publishTo            := {
       val nexus = "https://s01.oss.sonatype.org/"
       if (isSnapshot.value) Some("snapshots" at nexus + "content/repositories/snapshots")
       else Some("releases" at nexus + "service/local/staging/deploy/maven2")
     },
-    scmInfo                         := Some(
+    scmInfo              := Some(
       ScmInfo(
         url("https://github.com/philemone/hobogrid"),
         "scm:git@github.com:philemone/hobogrid.git"
       )
     )
   )
-  .dependsOn(hobogrid)
+  .dependsOn(hoboshape)
 
-lazy val hobogrid = project
-  .in(file("."))
+lazy val hoboshape = project
+  .in(file("hoboshape"))
   .enablePlugins(ScalaJSPlugin)
   .settings(developerSettings)
   .settings(
     publish / skip := true,
-    name           := "hobogrid",
+    name           := "hoboshape",
     libraryDependencies ++= Seq(
-      "org.scalatest" %% "scalatest"          % "3.2.17" % "test",
-      "org.scalatest" %% "scalatest-flatspec" % "3.2.17" % "test"
+      "org.scalatest" %% "scalatest"          % scalatestV % "test",
+      "org.scalatest" %% "scalatest-flatspec" % scalatestV % "test"
     )
   )
+
+lazy val example = project
+  .in(file("example"))
+  .enablePlugins(ScalaJSPlugin)
+  .settings(
+    scalaJSUseMainModuleInitializer := true,
+    name           := "example",
+    publish / skip := true,
+    libraryDependencies ++= Seq(
+      "com.raquo" %%% "laminar" % laminarV
+    )
+  ).dependsOn(hobogrid)
 
 val developerSettings = Seq(
   organization         := "io.github.philemone",
   organizationName     := "Philemone",
-  organizationHomepage := Some(url("https://github.com/philemone")),
-  homepage             := Some(url("https://github.com/philemone")),
+  organizationHomepage := Some(url(githubPage)),
+  homepage             := Some(url(githubPage)),
   developers           := List(
     Developer(
       id = "Philemone",
       name = "Filip Michalski",
       email = "filemon.michalski@gmail.com",
-      url = url("https://github.com/philemone")
+      url = url(githubPage)
     )
   )
 )

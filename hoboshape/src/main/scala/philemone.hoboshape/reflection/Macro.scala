@@ -1,4 +1,4 @@
-package philemone.hobogrid.reflection
+package philemone.hoboshape.reflection
 
 import scala.quoted.*
 
