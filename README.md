@@ -9,4 +9,4 @@ So, you're facing the classic `List[CaseClass]` conundrum? You could go all fanc
 
 But, if you're open to an adventure and a little bit of a let's-get-this-done kind of coder, Taminar's your coding buddy. Throw your list its way, and it'll cook up a basic HTML table without breaking a sweat.
 
-Concerned about the looks? You should be... tables look ugly. Taminar, with a little push, can make it usable ;)
+Concerned about the looks? You should be... tables look ugly. Taminar, with a little push, can make it usable (but not right now)

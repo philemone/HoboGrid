@@ -1,8 +1,6 @@
-package filemon.taminar.reflection
+package philemone.taminar.reflection
 
 import scala.quoted.*
-import scala.deriving.Mirror
-import scala.compiletime.constValueTuple
 
 case class FieldRepresentation(fieldName: String, displayType: String, displayValue: String)
 

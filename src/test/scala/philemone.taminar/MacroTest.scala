@@ -1,14 +1,14 @@
-package filemon.taminar
+package philemone.taminar
 
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest._
-import filemon.taminar.reflection.fieldNamesAndTypes
-import filemon.taminar.reflection.FieldRepresentation
+import philemone.taminar.reflection.fieldNamesAndTypes
+import philemone.taminar.reflection.FieldRepresentation
 import java.time.LocalDateTime
 import matchers._
 
-class Test extends AnyFlatSpec with Matchers {
+class MacroTest extends AnyFlatSpec with Matchers {
 
   "CC - one field" should "display data, type and name" in {
     case class TestCC(name: String)
