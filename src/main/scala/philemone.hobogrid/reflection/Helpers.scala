@@ -1,4 +1,4 @@
-package philemone.taminar.reflection
+package philemone.hobogrid.reflection
 import scala.quoted.*
 
 //Takes as it was from: https://softwaremill.com/scala-3-macros-tips-and-tricks/#shape-of-a-macro

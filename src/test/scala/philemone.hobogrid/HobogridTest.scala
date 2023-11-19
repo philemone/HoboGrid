@@ -1,12 +1,12 @@
-package philemone.taminar
+package philemone.hobogrid
 
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest._
-import philemone.taminar.reflection.FieldRepresentation
+import philemone.hobogrid.reflection.FieldRepresentation
 import matchers._
 
-class TaminarTest extends AnyFlatSpec with Matchers {
+class HobogridTest extends AnyFlatSpec with Matchers {
 
   "List[CC] - with primitives" should "display list of representations" in {
     case class TestCC(name: String, age: Int)
@@ -16,8 +16,8 @@ class TaminarTest extends AnyFlatSpec with Matchers {
       TestCC("Tom", 42)
     )
 
-    val taminar = new Taminar[TestCC]
-    taminar.tableRepr(list) should contain theSameElementsAs List(
+    val hobogrid = new Hobogrid[TestCC]
+    hobogrid.tableRepr(list) should contain theSameElementsAs List(
       FieldRepresentation("name", "String", "Marry") :: FieldRepresentation("age", "Int", "30") :: Nil,
       FieldRepresentation("name", "String", "Jerry") :: FieldRepresentation("age", "Int", "35") :: Nil,
       FieldRepresentation("name", "String", "Tom") :: FieldRepresentation("age", "Int", "42") :: Nil
