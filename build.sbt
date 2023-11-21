@@ -1,4 +1,4 @@
-import Versions._
+import Versions.*
 
 ThisBuild / version      := "0.0.1.001-SNAPSHOT"
 ThisBuild / scalaVersion := "3.3.1"
@@ -11,7 +11,7 @@ ThisBuild / scalacOptions ++= Seq(
 val githubPage = "https://github.com/philemone"
 
 lazy val hobogrid = project
-  .in(file("js"))
+  .in(file("hobogrid"))
   .enablePlugins(ScalaJSPlugin)
   .settings(developerSettings)
   .settings(
@@ -37,18 +37,17 @@ lazy val hobogrid = project
       )
     )
   )
-  .dependsOn(hoboshape)
+  .dependsOn(hoboshape.js)
 
-lazy val hoboshape = project
+lazy val hoboshape = crossProject(JSPlatform, JVMPlatform)
   .in(file("hoboshape"))
-  .enablePlugins(ScalaJSPlugin)
   .settings(developerSettings)
   .settings(
     publish / skip := true,
     name           := "hoboshape",
     libraryDependencies ++= Seq(
-      "org.scalatest" %% "scalatest"          % scalatestV % "test",
-      "org.scalatest" %% "scalatest-flatspec" % scalatestV % "test"
+      "org.scalatest" %%% "scalatest"          % scalatestV % "test",
+      "org.scalatest" %%% "scalatest-flatspec" % scalatestV % "test"
     )
   )
 
@@ -62,7 +61,7 @@ lazy val example = project
     libraryDependencies ++= Seq(
       "com.raquo" %%% "laminar" % laminarV
     )
-  ).dependsOn(hobogrid)
+  ).dependsOn(hobogrid, hoboshape.js)
 
 val developerSettings = Seq(
   organization         := "io.github.philemone",

@@ -5,7 +5,6 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest._
 import philemone.hoboshape.reflection.fieldNamesAndTypes
 import philemone.hoboshape.reflection.FieldRepresentation
-import java.time.LocalDateTime
 import matchers._
 
 class MacroTest extends AnyFlatSpec with Matchers {
@@ -35,14 +34,14 @@ class MacroTest extends AnyFlatSpec with Matchers {
     case class TestCC(books: List[String])
     val r = fieldNamesAndTypes[TestCC](TestCC(List("FP 2022", "FP 2023")))
     r.size shouldBe 1
-    r.head shouldBe FieldRepresentation("books", "List[String]", "FP 2022, FP 2023")
+    r.head shouldBe FieldRepresentation("books", "List[String]", "[FP 2022, FP 2023]")
   }
 
   "CC - list inside list" should "display higher kinded types of level 2" in {
     case class TestCC(listInList: List[List[String]])
     val r = fieldNamesAndTypes[TestCC](TestCC(Nil))
     r.size shouldBe 1
-    r.head shouldBe FieldRepresentation("listInList", "List[List[String]]", "")
+    r.head shouldBe FieldRepresentation("listInList", "List[List[String]]", "[]")
   }
 
   "CC - two lists" should "display higher kinded types" in {
@@ -50,20 +49,20 @@ class MacroTest extends AnyFlatSpec with Matchers {
     val r = fieldNamesAndTypes[TestCC](TestCC(List("FP 2022", "FP 2023"), List(100,101,102)))
     r.size shouldBe 2
     r should contain theSameElementsAs List(
-      FieldRepresentation("books", "List[String]", "FP 2022, FP 2023"),
-      FieldRepresentation("ids", "List[Int]", "100, 101, 102")
+      FieldRepresentation("books", "List[String]", "[FP 2022, FP 2023]"),
+      FieldRepresentation("ids", "List[Int]", "[100, 101, 102]")
     )
   }
 
   "CC - mutiple basic types" should "display all together" in {
-    case class User(name: String, age: Int, hot: Boolean, born: LocalDateTime, moneyInPocket: BigDecimal)
-    val r = fieldNamesAndTypes[User](User("Eric", 29, true, LocalDateTime.of(2023, 2, 2, 12, 0), 20.3))
+    case class User(name: String, age: Int, hot: Boolean, sign: Char, moneyInPocket: BigDecimal)
+    val r = fieldNamesAndTypes[User](User("Eric", 29, true, 'C', 20.3))
     r.size shouldBe 5
     r should contain theSameElementsAs List(
       FieldRepresentation("name", "String", "Eric"),
       FieldRepresentation("age", "Int", "29"),
       FieldRepresentation("hot", "Boolean", "true"),
-      FieldRepresentation("born", "LocalDateTime", "2023-02-02T12:00"),
+      FieldRepresentation("sign", "Char", "C"),
       FieldRepresentation("moneyInPocket", "BigDecimal", "20.3"),
     )
   }
@@ -79,7 +78,7 @@ class MacroTest extends AnyFlatSpec with Matchers {
     case class TestCC(tuple3: (String, List[Int], Boolean))
     val r = fieldNamesAndTypes[TestCC](TestCC(("Uno", List(1), true)))
     r.size shouldBe 1
-    r.head shouldBe FieldRepresentation("tuple3", "Tuple3[String, List[Int], Boolean]", "(Uno, 1, true)")
+    r.head shouldBe FieldRepresentation("tuple3", "Tuple3[String, List[Int], Boolean]", "(Uno, [1], true)")
   }
 
   "CC - tuple with nested tuple" should "display nested types" in {
@@ -87,6 +86,14 @@ class MacroTest extends AnyFlatSpec with Matchers {
     val r = fieldNamesAndTypes[TestCC](TestCC(("Uno", ("Due", 2), 1)))
     r.size shouldBe 1
     r.head shouldBe FieldRepresentation("tuple3", "Tuple3[String, Tuple2[String, Integer], Integer]", "(Uno, (Due, 2), 1)")
+  }
+
+  "CC - with CaseClass" should "display somehow?" in {
+    case class User(name: String, age: Int)
+    case class TestCC(user: User)
+    val r = fieldNamesAndTypes[TestCC](TestCC(User("Monica", 28)))
+    r.size shouldBe 1
+    r.head shouldBe FieldRepresentation("user", "User", "User(Monica,28)")
   }
 
 }

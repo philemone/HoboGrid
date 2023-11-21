@@ -8,6 +8,12 @@ private object TupleStrRepr {
   def mkString(list: List[String]) = list.mkString(start, separator, end)
 }
 
+private object ListStrRepr {
+  val (start, end)                 = ("[", "]")
+  val separator                    = ", "
+  def mkString(list: List[String]) = list.mkString(start, separator, end)
+}
+
 private[hoboshape] def valuesToString[T: Type](expr: Expr[T], depth: Int = 0)(using Quotes): Expr[String] = {
   import quotes.reflect.*
 
@@ -22,7 +28,7 @@ private[hoboshape] def valuesToString[T: Type](expr: Expr[T], depth: Int = 0)(us
             case '{ ($ls: Option[t]) } =>
               valuesToString('{ $ls.getOrElse("") }, depth + 1) // TODO getOrElse seems wrong
             case '{ ($ls: List[t]) }   =>
-              '{ $ls.map(elem => ${ valuesToString('elem, depth + 1) }).mkString(", ") }
+              '{ ListStrRepr.mkString($ls.map(elem => ${ valuesToString('elem, depth + 1) })) }
             case t                     => '{ $t.toString() }
           }
         }
